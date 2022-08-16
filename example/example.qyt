@@ -1,0 +1,36 @@
+// Class
+
+private class ExampleClass
+{
+    ExampleClass(int example1. string example2)
+    {
+        print(example1, example2)
+    }
+}
+
+/*
+
+class ExampleClass() :
+    def __init__(example1, example2):
+        print(example1, example2)
+    def __new__():
+        raise Exception("You cannot to new the class")
+
+
+private class ExampleClass
+{
+    ExampleClass(int example1. string example2)
+    {
+        print(example1, example2)
+    }
+    private ExampleClass("You are loser");
+}
+
+class ExampleClass() :
+    def __init__(example1, example2):
+        print(example1, example2)
+    def __new__():
+        raise Exception("You are loser")
+
+
+*/
