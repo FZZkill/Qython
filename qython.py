@@ -1,6 +1,10 @@
-import sys
+#!/usr/bin/python3.10
 
-if len(sys.argv) == 0 :
+import sys
+from src import check
+
+
+if len(sys.argv) == 1 :
     print("""
 |==MENU==|
 
@@ -18,7 +22,7 @@ Qython
 
 
     """)
-elif sys.argv[0] == "about" or sys.argv[0] == "--version":
+elif sys.argv[1] == "about" or sys.argv[1] == "--version":
     print("""
     This is my project to write a small compiler.
     It can compile Qython code to Python just like TypeScript to JavaScript.
@@ -26,3 +30,5 @@ elif sys.argv[0] == "about" or sys.argv[0] == "--version":
     This program may stop at some point.
     Version: 1.0
     """)
+elif sys.argv[1] == "-c" or sys.argv[1] == "--compiler" :
+    check.check(sys.argv[1])
