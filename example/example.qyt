@@ -1,6 +1,5 @@
 // nmsl
 int y = 16
-int x = 15
-int u = 21
-/*int x = 114  //has Error*/
-l.println(x.length())
+string nmsl = "e=mc2"
+l.println(y)
+l.println(nmsl)

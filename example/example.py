@@ -1,3 +1,4 @@
 y=16
-x=15
-u=21
+nmsl="e=mc2"
+print(y)
+print(nmsl)
