@@ -2,6 +2,7 @@
 
 import sys
 from src import check
+from src import io
 
 
 if len(sys.argv) == 1 :
@@ -31,4 +32,9 @@ elif sys.argv[1] == "about" or sys.argv[1] == "--version":
     Version: 1.0
     """)
 elif sys.argv[1] == "-c" or sys.argv[1] == "--compiler" :
-    check.check(sys.argv[1])
+    reader = io.only_read(sys.argv[2])
+    reader = io.reNote(reader)
+    print(reader)
+    TokenStream = check.check(reader)
+    print(TokenStream)
+    io.write(sys.argv[2][:-3]+"py", check.uncheck(TokenStream))
