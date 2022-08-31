@@ -5,7 +5,7 @@
 # author: FZZkill
 # License: Mozilla Public License 2
 """
-from src import funs
+import funs
 lsFile = []
 # Token stream
 token = []
@@ -46,6 +46,13 @@ def check(Items : str) -> list :
                     items.append(cmd)
                     types[cmd] = funs.Fprintln(functions[0])
                     token.append("Function")
+                if functions[0] == "print" :
+                    functions = functions[1].split(")")
+                    cmd = "COMMAND"+str(ramdoms)
+                    items.append(cmd)
+                    types[cmd] = funs.Fprint(functions[0])
+                    token.append("Function")
+
         ramdoms = ramdoms + 1
     ramdoms = ramdoms + 1
 
