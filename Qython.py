@@ -28,7 +28,7 @@ def func() :
 
             --Complier / -c :
                 Complier file
-                
+
                     --output / -o :
                         set output file name
                         Note that the operation name is from left to right!
@@ -56,10 +56,14 @@ def check_1(argc) :
             sys.exit(0)
         elif compiler :
             files.append(i)
+        elif io.isFile(i) :
+            files.append(i)
         else :
             raise Exception("Error in "+ i)
 
 if __name__ == "__main__" :
     check_1(argc)
-    for i in files :
-        check.foreCheck(i)
+    sb = io.readInString(files[1])
+    # print(sb)
+    u = check.Token(sb)
+    # print(u)

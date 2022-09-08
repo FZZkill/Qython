@@ -5,6 +5,7 @@
 # author: FZZkill
 # License: Mozilla Public License 2
 """
+import os
 
 class IoUtil :
 
@@ -26,20 +27,6 @@ class IoUtil :
                     break
                 x.append(i[j])
         return x
-        
-
-    def counter(this, FilePath) :
-        x = readInString(FilePath)
-        do = ""
-        x = x.split("\n")
-        for i in x:
-            try :
-                v = i.index("//")
-                do = do + i[:v] + "\n"
-            except:
-                do = do + i + "\n"
-        return do
-
 
 def readInList(FilePath) :
     with open(FilePath, 'r') as f :
@@ -57,3 +44,6 @@ def writeInList(Items, FilePath):
     RN = IoUtil.lsToStrRN(Items)
     with open(FilePath, 'w') as f:
         f.write(RN)
+
+def isFile(FilePath) :
+        return os.path.isfile(FilePath)
