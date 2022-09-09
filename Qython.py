@@ -66,4 +66,5 @@ if __name__ == "__main__" :
     sb = io.readInString(files[1])
     # print(sb)
     u = check.Token(sb)
-    # print(u)
+    print(u)
+

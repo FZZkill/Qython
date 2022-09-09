@@ -59,4 +59,5 @@ Token 一般长这样(这只是例子)
 
 在`./source/check.py`中的 `def Token(value)`函数中
 
+在check.py中，pos永远指向下一位，UNDEFINE永远是单位，在Token流输出的时候不会报错
 我不打算考虑除了英文以外的字符，因为这是个练手项目

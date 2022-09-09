@@ -1,68 +1,80 @@
 from source import io
-# token : 
-KeyWord = ["int", "string", "float", "bool"]
-
+# token :
+KeyWord = ["int", "string", "float", "bool", "function", "if", "else"]
+Key = ["\n", "\r"]
 Number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 Letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_']
-Sets = ["{", "}", "[", "]", "(", ")"]
-Using = ["+", "-", "*", "/", "=", ">", "<", ">=", "<="]
+Sets = ['{', '}', '[', ']', '(', ')']
+Using = ["+", "-", "*", "/", "=", ">", "<", ">=", "<=", "!", "!="]
 Other = [" ", "\n"]
+
 def Token(value) :
 
     token = []
-    # vaule = "int x = 1"
     column = 0
-    line = 0
+    line = 1
     pos = 0
     llm = ""
 
-    while True :
-        x = ""
+    x = ""
+    while pos != len(value) :
+
+        mod = ""
         try :
             x = str(value[pos])
         except IndexError :
             break
 
-        if x == "\n" or x == ';' :
-            pos += 1
-            line += 1
-            column = 0
-            llm = ""
-            continue
-        if x == " " :
+        if x == "\n" :
             pos += 1
             column += 1
+            line += 1
+            token.append(("ENDER", None, line, column, pos))
+            continue
+        
+        if x == ';' :
+            pos += 1
+            column += 1
+            token.append(("ENDER", None))
+            continue
+        
+        # 是字符串
+        if x == '"' :
+            pos += 1
+            b = value.index('"', pos)
+            mod = value[pos:b]
+            build = mod.count("\n")
+            line + build
+            column += b
+            pos += b
+            token.append(("STRING", mod, line, column, pos))
+            continue
+        # 是数字
+        if x in Number :
+            while True :
+                pos += 1
+                try :
+                    mod += x
+                    x = str(value[pos])
+                except IndexError:
+                    token.append(("NUMBER", mod, line, column, pos))
+                    break
+                if x not in Number :
+                    token.append(("NUMBER", mod, line, column, pos))
+                    break
             continue
 
-        while x in Letter:
-            llm += x
-            pos += 1
-            x = str(value[pos])
-            if x == " " :
-                break
-
-        while x in Number :
-            llm += x
-            pos += 1
-            x = str(value[pos])
-            if x == " " :
-                break
-
-        while x in Using :
-            llm += x
-            pos += 1
-            x = str(value[pos])
-            if x == " " :
-                break
-
-        if llm in KeyWord :
-            token.append((llm, None))
-        elif llm in Using :
-            token.append(("OPERATOR", llm))
-        elif llm.isdigit() :
-            token.append(("NUMBER", llm))
-        else :
-            token.append(("UNDEFINE", llm))
-        llm = ""
+        
+#         if llm in KeyWord :
+            # token.append((llm, None, line, column, pos))
+        # elif llm in Using :
+            # token.append(("OPERATOR", llm, line, column, pos))
+        # elif llm in Sets :
+            # token.append(("CONTROL", llm, line, column, pos))
+        # elif llm.isdigit() :
+            # token.append(("NUMBER", llm, line, column, pos))
+        # else :
+        pos+=1
+        token.append(("UNDEFINE", x, line, column, pos))
 
     return token
