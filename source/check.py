@@ -25,19 +25,31 @@ def Token(value) :
         except IndexError :
             break
 
-        if x == "\n" :
+        if x == "\n":
             pos += 1
             column += 1
             line += 1
-            token.append(("ENDER", None, line, column, pos))
-            continue
-        
+            if token[-1][0] == "ENDER" :
+                continue
+            else :
+                token.append(("ENDER", None, line, column, pos))
+                continue
+
         if x == ';' :
             pos += 1
             column += 1
-            token.append(("ENDER", None))
+            if token[-1][0] == "ENDER" :
+                continue
+            else :
+                token.append(("ENDER", None, line, column, pos))
+                continue
+
+        # 是空格
+        if x == ' ': 
+            pos += 1
+            column += 1
             continue
-        
+
         # 是字符串
         if x == '"' :
             pos += 1
