@@ -2,7 +2,7 @@
 
 import sys
 
-from source import check
+from source import lexer
 from source import io
 
 argc = sys.argv
@@ -63,8 +63,15 @@ def check_1(argc) :
 
 if __name__ == "__main__" :
     check_1(argc)
-    sb = io.readInString(files[1])
+    if len(files) > 1 :
+        print(files)
+        sb = io.readInString(files[1])
     # print(sb)
-    u = check.Token(sb)
-    print(u)
+        u = lexer.Token(sb)
+        print(u)
+    elif len(argc) > 1 :
 
+        if about :
+            func()
+    else :
+        func()
