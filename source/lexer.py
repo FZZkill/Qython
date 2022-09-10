@@ -14,7 +14,7 @@ def Token(value) :
     line = 1
     pos = 0
     llm = ""
-
+    box = ""
     x = ""
     while pos != len(value) :
 
@@ -25,6 +25,13 @@ def Token(value) :
             break
 
         if x == "\n":
+
+            if box in KeyWord :
+                token.append((box.upper(), None, line, column, pos))
+            elif box != "" and box != " ":
+                token.append(("IDENTIFIER", box, line, column, pos))
+            box = ""
+
             pos += 1
             column += 1
             line += 1
@@ -35,6 +42,11 @@ def Token(value) :
                 continue
 
         if x == ';' :
+            if box in KeyWord :
+                token.append((box.upper(), None, line, column, pos))
+            elif box != "" and box != " ":
+                token.append(("IDENTIFIER", box, line, column, pos))
+            box = ""
             pos += 1
             column += 1
             if token[-1][0] == "ENDER" :
@@ -45,6 +57,11 @@ def Token(value) :
 
         # 是空格
         if x == ' ': 
+            if box in KeyWord :
+                token.append((box.upper(), None, line, column, pos))
+            elif box != "" and box != " ":
+                token.append(("IDENTIFIER", box, line, column, pos))
+            box = ""
             pos += 1
             column += 1
             continue
@@ -60,18 +77,31 @@ def Token(value) :
             pos += b
             token.append(("STRING", mod, line, column, pos))
             continue
+
         # 是数字
         if x in Number :
+            floats = False
             while True :
                 pos += 1
                 try :
                     mod += x
                     x = str(value[pos])
+                    if x == '.' and floats :
+                        raise Exception("Fuck You Float '.'")
+                    if x == '.' and not floats:
+                        floats = True
+
                 except IndexError:
-                    token.append(("NUMBER", mod, line, column, pos))
+                    if floats :
+                        token.append(("FLOAT", mod, line, column, pos))
+                    else :
+                        token.append(("NUMBER", mod, line, column, pos))
                     break
-                if x not in Number :
-                    token.append(("NUMBER", mod, line, column, pos))
+                if x not in Number and x != ".":
+                    if floats :
+                        token.append(("FLOAT", mod, line, column, pos))
+                    else :
+                        token.append(("NUMBER", mod, line, column, pos))
                     break
             continue
 
@@ -86,6 +116,5 @@ def Token(value) :
             # token.append(("NUMBER", llm, line, column, pos))
         # else :
         pos+=1
-        token.append(("UNDEFINE", x, line, column, pos))
-
+        box += x
     return token

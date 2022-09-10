@@ -45,7 +45,7 @@ llvm不是一个编译器，而是一个编译器的架构，llvm编译器架构
 -   不要试图使用正则去做解析。但是你可以使用正则进项小部分解析。
 -   当不确定如何解析某部分时，就当成错误抛出来。
 
-代码以及实现应该分成三部分写 :
+代码以及实现应该分成四部分写 :
 
 1. 字符流(Byte Stream)
 2. Token 流(Lexer)
@@ -77,9 +77,9 @@ Token 一般长这样(这只是例子)
 
 "|" 可以被任何分隔符号代替，Qython 用的是",", 使用的是列表 + 元组的形式
 
-在`./source/check.py`中的 `def Token(value)`函数中
+在`./source/lexer.py`中的 `def Token(value)`函数中
 
-在 check.py 中，pos 永远指向下一位，UNDEFINE 永远是单位，在 Token 流输出的时候不会报错
+在 lexer.py 中，pos 永远指向下一位
 
 我不打算考虑除了英文以外的字符，因为这是个练手项目
 
@@ -94,11 +94,8 @@ Token 一般长这样(这只是例子)
     ('NUMBER', '11451', 1, 5, 11),
     ('UNDEFINE', 'N', 1, 5, 12), 
     ('ENDER', None, 2, 6, 13),
-    ('UNDEFINE', 'i', 2, 6, 14),
-    ('UNDEFINE', 'n', 2, 6, 15),
-    ('UNDEFINE', 't', 2, 6, 16),
-    ('UNDEFINE', ' ', 2, 6, 17),
-    ('UNDEFINE', 'x', 2, 6, 18),
+    ('INT', None, 2, 6, 16),
+    ('IDENTIFIER', 'x', 2, 6, 18),
     ('ENDER', None), 
     ('ENDER', None, 3, 8, 20)]
 
