@@ -56,6 +56,8 @@ llvm不是一个编译器，而是一个编译器的架构，llvm编译器架构
 
 字符流我们可以用循环写，依靠字符串切片模拟字符流
 
+### Lexer
+Lexer 输出 Token 流
 -   line
 -   column
 -   pos
@@ -98,6 +100,11 @@ Token 一般长这样(这只是例子)
     ('IDENTIFIER', 'x', 2, 6, 18),
     ('ENDER', None, 3, 8, 20)]
 
-P.S.: 当前Token流的ENDER项目没有line,column, pos这个小问题已被修复 </br>
-P.S.: 当前Token流的空格项目已被修复
+截止提交 76fc51019534c04a4dca2d3fbc716cc95e239d17 提交,
+Lexer的Token流输出已经全部结束
 
+P.S. : 在lexer的时候，我们将会报出一个显而易见的错误！
+### Parser
+
+Parser输出Parser流，将会控制类型，合并Token流输出Parser流，
+将会输出部分编译时错误！

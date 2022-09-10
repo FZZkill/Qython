@@ -85,6 +85,17 @@ def Token(value) :
             token.append(("STRING", mod, line, column, pos))
             continue
 
+        if x == "'" :
+            pos += 1
+            b = value.index("'", pos)
+            mod = value[pos:b]
+            build = mod.count("\n")
+            line + build
+            column += b
+            pos += b
+            token.append(("STRING", mod, line, column, pos))
+            continue
+
         # 是数字
         if x in Number :
             floats = False
