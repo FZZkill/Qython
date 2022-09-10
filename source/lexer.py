@@ -1,10 +1,10 @@
 from source import io
 # token :
-KeyWord = ["int", "string", "float", "bool", "function", "if", "else"]
+KeyWord = ["int", "string", "float", "bool", "function", "if", "else", "class"]
 Key = ["\n", "\r"]
 Number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-Sets = ['{', '}', '[', ']', '(', ')']
-Using = ["+", "-", "*", "/", "=", ">", "<", ">=", "<=", "!", "!="]
+PSMD = ['+', '-', '*', '/']
+Operator = ["==", ">", "<", ">=", "<=", "!", "!="]
 Other = [" ", "\n"]
 
 def Token(value) :
@@ -66,6 +66,13 @@ def Token(value) :
             column += 1
             continue
 
+        # 调用
+
+        if x == "." :
+            pos += 1
+            token.append(("GIT", None, line, column, pos))
+            continue
+
         # 是字符串
         if x == '"' :
             pos += 1
@@ -105,12 +112,53 @@ def Token(value) :
                     break
             continue
 
-        
+        # 是限定符
+        if x == "{" or x == "}" :
+            pos += 1
+            token.append(("BIGLIMINT", x, line, column, pos))
+            continue
+        if x == "[" or x == "]" :
+            pos += 1
+            token.append(("MIDDLELIMINT", x, line, column, pos))
+            continue
+        if x == "(" or x == ")" :
+            pos += 1
+            token.append(("SMALLLIMINT", x, line, column, pos))
+            continue
+
+        # 是操作符
+        if x in Operator :
+            llm = ""
+            pos += 1
+            llm += x
+            if value[pos] in Operator :
+                llm += value[pos]
+                pos += 1
+                token.append(("OPERATOR", llm, line, column, pos))
+            else :
+                token.append(("OPERATOR", llm, line, column, pos))
+            continue
+
+        # 是 赋值符 :
+        if x == '=' :
+            pos += 1
+            if token[-1][0] == "SET" :
+                token.pop()
+                token.append(("OPERATOR", "==", line, column, pos))
+            else :
+                token.append(("SET", x, line, column, pos))
+            continue
+
+        # 是加减乘除
+        if x in PSMD :
+            pos += 1
+            token.append(("PSMD", x, line, column, pos))
+
 #         if llm in KeyWord :
             # token.append((llm, None, line, column, pos))
-        # elif llm in Using :
+        # elif llm in Operator :
             # token.append(("OPERATOR", llm, line, column, pos))
-        # elif llm in Sets :
+        # elif llm in Limint :
             # token.append(("CONTROL", llm, line, column, pos))
         # elif llm.isdigit() :
             # token.append(("NUMBER", llm, line, column, pos))

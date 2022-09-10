@@ -96,8 +96,8 @@ Token 一般长这样(这只是例子)
     ('ENDER', None, 2, 6, 13),
     ('INT', None, 2, 6, 16),
     ('IDENTIFIER', 'x', 2, 6, 18),
-    ('ENDER', None), 
     ('ENDER', None, 3, 8, 20)]
 
 P.S.: 当前Token流的ENDER项目没有line,column, pos这个小问题已被修复 </br>
 P.S.: 当前Token流的空格项目已被修复
+
