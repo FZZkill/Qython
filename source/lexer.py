@@ -1,19 +1,16 @@
-from source import io
-# token :
-KeyWord = ["int", "string", "float", "bool", "function", "if", "else", "class"]
+KeyWord = ["int", "string", "float", "bool", "function", "if", "else", "class", "true", "false", "imp", "const", "ret", "pri", "pro"]
 Key = ["\n", "\r"]
 Number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 PSMD = ['+', '-', '*', '/']
 Operator = ["==", ">", "<", ">=", "<=", "!", "!="]
-Other = [" ", "\n"]
 
 def Token(value) :
 
-    token = []
+    # token = [{"type" : "POP"}]
+    token = [{"type":"pop", "value" : None}]
     column = 0
     line = 1
     pos = 0
-    llm = ""
     box = ""
     x = ""
     while pos != len(value) :
@@ -23,54 +20,47 @@ def Token(value) :
             x = str(value[pos])
         except IndexError :
             break
-
-        if x == "\n":
-
+        if x in Key:
             if box in KeyWord :
-                token.append((box.upper(), None, line, column, pos))
+                token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
             elif box != "" and box != " ":
-                token.append(("IDENTIFIER", box, line, column, pos))
+                token.append({"type" : "IDENTIFIER", "value" : None, "line" : line, "column" : column,"pos": pos})
             box = ""
-
             pos += 1
             column += 1
-            line += 1
-            if token[-1][0] == "ENDER" :
-                continue
-            else :
-                token.append(("ENDER", None, line, column, pos))
-                continue
+            continue
 
         if x == ';' :
             if box in KeyWord :
-                token.append((box.upper(), None, line, column, pos))
+                token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
             elif box != "" and box != " ":
-                token.append(("IDENTIFIER", box, line, column, pos))
+                token.append({"type" : "IDENTIFIER", "value" : box, "line" : line, "column" : column,"pos": pos})
             box = ""
             pos += 1
             column += 1
-            if token[-1][0] == "ENDER" :
+            if token[-1]["type"] == "ENDER" :
                 continue
             else :
-                token.append(("ENDER", None, line, column, pos))
+                token.append({"type" : "ENDER", "value" : None, "line" : line, "column" : column,"pos": pos})
                 continue
 
+        # TODO <fzzkill : 2022 9 29> 函数：分号的解析，Parser的分号的解析 
+
         # 是空格
-        if x == ' ': 
+        if x == ' ':
             if box in KeyWord :
-                token.append((box.upper(), None, line, column, pos))
+                token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
             elif box != "" and box != " ":
-                token.append(("IDENTIFIER", box, line, column, pos))
+                token.append({"type" : "IDENTIFIER", "value" : None, "line" : line, "column" : column,"pos": pos})
             box = ""
             pos += 1
             column += 1
             continue
 
         # 调用
-
         if x == "." :
             pos += 1
-            token.append(("GIT", None, line, column, pos))
+            token.append({"type" : "DO", "value" : None, "line" : line, "column" : column,"pos": pos})
             continue
 
         # 是字符串
@@ -82,18 +72,21 @@ def Token(value) :
             line + build
             column += b
             pos += b
-            token.append(("STRING", mod, line, column, pos))
+            token.append({"type" : "STR", "value" : None, "line" : line, "column" : column,"pos": pos})
             continue
 
         if x == "'" :
             pos += 1
-            b = value.index("'", pos)
+            try :
+                b = value.index("'", pos)
+            except ValueError :
+                print("Error: Your single quotes are missing! in line :", line, " , in column", column)
             mod = value[pos:b]
             build = mod.count("\n")
             line + build
             column += b
             pos += b
-            token.append(("STRING", mod, line, column, pos))
+            token.append({"type" : "STRING", "value" : None, "line" : line, "column" : column,"pos": pos})
             continue
 
         # 是数字
@@ -105,75 +98,73 @@ def Token(value) :
                     mod += x
                     x = str(value[pos])
                     if x == '.' and floats :
-                        raise Exception("Fuck You Float '.'")
+                        print("Error: Too many .! in line :", line, " ,in column :", column)
                     if x == '.' and not floats:
                         floats = True
-
                 except IndexError:
                     if floats :
-                        token.append(("FLOAT", mod, line, column, pos))
+                        token.append({"type" : "FLOAT", "value" : None, "line" : line, "column" : column,"pos": pos})
                     else :
-                        token.append(("NUMBER", mod, line, column, pos))
+                        token.append({"type" : "NUMBER", "value" : None, "line" : line, "column" : column,"pos": pos})
                     break
                 if x not in Number and x != ".":
                     if floats :
-                        token.append(("FLOAT", mod, line, column, pos))
+                        token.append({"type" : "FLOAT", "value" : None, "line" : line, "column" : column,"pos": pos})
                     else :
-                        token.append(("NUMBER", mod, line, column, pos))
+                        token.append({"type" : "NUMBER", "value" : None, "line" : line, "column" : column,"pos": pos})
                     break
             continue
 
         # 是限定符
         if x == "{" or x == "}" :
-            pos += 1
-            token.append(("BIGLIMINT", x, line, column, pos))
+            if x == "{" :
+                pos += 1
+                token.append({"type" : "BIGLIMINTO", "value" : x, "line" : line, "column" : column,"pos": pos})
+            else :
+                token.append({"type" : "BIGLIMINTC", "value" : x, "line" : line, "column" : column,"pos": pos})
             continue
+
         if x == "[" or x == "]" :
-            pos += 1
-            token.append(("MIDDLELIMINT", x, line, column, pos))
+            if x == "[" :
+                pos += 1
+                token.append({"type" : "MIDDLELIMINTO", "value" : x, "line" : line, "column" : column,"pos": pos})
+            else :
+                token.append({"type" : "MIDDLELIMINTC", "value" : x, "line" : line, "column" : column,"pos": pos})
             continue
+
         if x == "(" or x == ")" :
-            pos += 1
-            token.append(("SMALLLIMINT", x, line, column, pos))
+            if x == "(" :
+                pos += 1
+                token.append({"type" : "SMALLLIMINTO", "value" : x, "line" : line, "column" : column,"pos": pos})
+            else :
+                token.append({"type" : "SMALLLIMINTC", "value" : x, "line" : line, "column" : column,"pos": pos})
             continue
 
         # 是操作符
         if x in Operator :
-            llm = ""
             pos += 1
-            llm += x
-            if value[pos] in Operator :
-                llm += value[pos]
-                pos += 1
-                token.append(("OPERATOR", llm, line, column, pos))
-            else :
-                token.append(("OPERATOR", llm, line, column, pos))
+            pos += 1
+            token.append({"type" : "OPERATOR", "value" : x, "line" : line, "column" : column,"pos": pos})
             continue
 
         # 是 赋值符 :
         if x == '=' :
             pos += 1
-            if token[-1][0] == "SET" :
+            #
+            if token[-1]["type"] == "SET" :
                 token.pop()
-                token.append(("OPERATOR", "==", line, column, pos))
+                token.append({"type": "OPERATOR", "value": "==", "line": line, "column":column, "pos":pos})
             else :
-                token.append(("SET", x, line, column, pos))
+                token.append({"type": "SET", "value": "=", "line": line, "column":column, "pos":pos})
             continue
 
         # 是加减乘除
         if x in PSMD :
             pos += 1
-            token.append(("PSMD", x, line, column, pos))
+            token.append({"type": "PSMD", "value": x, "line": line, "column":column, "pos":pos})
 
-#         if llm in KeyWord :
-            # token.append((llm, None, line, column, pos))
-        # elif llm in Operator :
-            # token.append(("OPERATOR", llm, line, column, pos))
-        # elif llm in Limint :
-            # token.append(("CONTROL", llm, line, column, pos))
-        # elif llm.isdigit() :
-            # token.append(("NUMBER", llm, line, column, pos))
-        # else :
-        pos+=1
+        column += 1
+        pos += 1
         box += x
+    token.pop(0)
     return token

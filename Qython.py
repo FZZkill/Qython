@@ -3,6 +3,7 @@
 import sys
 
 from source import lexer
+from source import parser
 from source import io
 
 argc = sys.argv
@@ -64,10 +65,12 @@ def check_1(argc) :
 if __name__ == "__main__" :
     check_1(argc)
     if len(files) > 1 :
-        print(files)
+        # print(files)
         sb = io.readInString(files[1])
     # print(sb)
         u = lexer.Token(sb)
+        print(u)
+        u = parser.parser(u)
         print(u)
     elif len(argc) > 1 :
 
