@@ -24,7 +24,7 @@ def Token(value) :
             if box in KeyWord :
                 token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
             elif box != "" and box != " ":
-                token.append({"type" : "IDENTIFIER", "value" : None, "line" : line, "column" : column,"pos": pos})
+                token.append({"type" : "IDENTIFIER", "value" : box, "line" : line, "column" : column,"pos": pos})
             box = ""
             pos += 1
             column += 1
@@ -43,15 +43,27 @@ def Token(value) :
             else :
                 token.append({"type" : "ENDER", "value" : None, "line" : line, "column" : column,"pos": pos})
                 continue
+        if x == ',' :
+            if box in KeyWord :
+                token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
+            elif box != "" and box != " ":
+                token.append({"type" : "IDENTIFIER", "value" : box, "line" : line, "column" : column,"pos": pos})
+            box = ""
+            pos += 1
+            column += 1
+            if token[-1]["type"] == "ANDDER" :
+                continue
+            else :
+                token.append({"type" : "ENDER", "value" : None, "line" : line, "column" : column,"pos": pos})
+                continue
 
-        # TODO <fzzkill : 2022 9 29> 函数：分号的解析，Parser的分号的解析 
 
         # 是空格
         if x == ' ':
             if box in KeyWord :
                 token.append({"type" : box.upper(), "value" : None, "line" : line, "column" : column,"pos": pos})
             elif box != "" and box != " ":
-                token.append({"type" : "IDENTIFIER", "value" : None, "line" : line, "column" : column,"pos": pos})
+                token.append({"type" : "IDENTIFIER", "value" : box, "line" : line, "column" : column,"pos": pos})
             box = ""
             pos += 1
             column += 1
@@ -67,19 +79,22 @@ def Token(value) :
         if x == '"' :
             pos += 1
             b = value.index('"', pos)
-            mod = value[pos:b]
+            try :
+                mod = value[pos:b]
+            except IndexError :
+                print("Error: No string end ! in line: ", x["line"], " ,in column: ", x["column"])
             build = mod.count("\n")
             line + build
             column += b
             pos += b
-            token.append({"type" : "STR", "value" : None, "line" : line, "column" : column,"pos": pos})
+            token.append({"type" : "STR", "value" : mod, "line" : line, "column" : column,"pos": pos})
             continue
 
         if x == "'" :
             pos += 1
             try :
                 b = value.index("'", pos)
-            except ValueError :
+            except IndexError :
                 print("Error: Your single quotes are missing! in line :", line, " , in column", column)
             mod = value[pos:b]
             build = mod.count("\n")
@@ -103,15 +118,15 @@ def Token(value) :
                         floats = True
                 except IndexError:
                     if floats :
-                        token.append({"type" : "FLOAT", "value" : None, "line" : line, "column" : column,"pos": pos})
+                        token.append({"type" : "FLOATNUMBER", "value" : mod, "line" : line, "column" : column,"pos": pos})
                     else :
-                        token.append({"type" : "NUMBER", "value" : None, "line" : line, "column" : column,"pos": pos})
+                        token.append({"type" : "NUMBER", "value" : mod, "line" : line, "column" : column,"pos": pos})
                     break
                 if x not in Number and x != ".":
                     if floats :
-                        token.append({"type" : "FLOAT", "value" : None, "line" : line, "column" : column,"pos": pos})
+                        token.append({"type" : "FLOATNUMBER", "value" : mod, "line" : line, "column" : column,"pos": pos})
                     else :
-                        token.append({"type" : "NUMBER", "value" : None, "line" : line, "column" : column,"pos": pos})
+                        token.append({"type" : "NUMBER", "value" : mod, "line" : line, "column" : column,"pos": pos})
                     break
             continue
 

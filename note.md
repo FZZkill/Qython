@@ -128,3 +128,14 @@ Parser输出Parser流，将会控制类型，合并Token流输出Parser流，
     // 可能不够形象，但理解万岁
 
 所以，Parser流的唯一作用，就是定义文法，依靠文法合并Token流并且报出部分错误.
+
+这里，我的parser分成了多个部分
+
+    Token_Append_KeyWords(Token) -> parser
+    # 检查重复的东西并且报出错误
+    Token_Append_Type(Token) -> parser
+    # 检查int, string, bool, float类型的文法
+    Token_Append_IfElse(Token) -> parser
+    # 检查if和else类型文法并且报出错误
+
+依次类推检查所有类型的文法

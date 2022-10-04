@@ -1,126 +1,73 @@
 # 文法
+KeyWord = ["INT", "STRING", "FLOAT", "BOOL", "FUNCTION", "IF", "ELSE", "CLASS", "TRUE", "FALSE", "IMP", "CONST", "RET", "PRI", "PRO"]
 Error = False
 types = ["INT", "STRING", "BOOL", "FLOAT"]
+Types_in = {"INT" : "NUMBER", "STRING": "STR", "FLOAT" : "FLOATNUMBER"}
 determiner = ["PRI", "PRO"]
 boolean = ["TRUE", "FALSE"]
-# Other = ["class", "function", "if", "else", "imp", "const", "ret"]
 
 def parser(Token : list) :
     ps = Token_Append_KeyWords(Token)
+    ps = Token_Append_Type(ps)
     return ps
 
-def Token_Append_KeyWords(Token) :
+def Token_Append_KeyWords(Token : list) :
     global Error
-    parser = [{"type": "POP"}]
-
+    parser = [{"type" : "POP"}]
     while len(Token) != 0:
         x = Token[0]
         Token.pop(0)
-
-        if x["type"] in types :
-            if parser[-1]["type"] in types :
-                Error = True
-                print("Error: Too many types! in line: ", x["line"], " ,in column: ", x["column"])
-                continue
-            parser.append(x)
+        if x["type"] == parser[-1]["type"]:
+            Error = True
+            print("Error: Too many types (" + x["type"] + ")! in line: ", x["line"], " ,in column: ", x["column"])
             continue
-
-        if x["type"] in determiner :
-            if parser[-1]["type"] in determiner :
-                Error = True
-                print("Error: Too many types! in line: ", x["line"], " ,in column: ", x["column"])
-                continue
-            parser.append(x)
-            continue
-
-        if x["type"] in boolean :
-            if parser[-1]["type"] in boolean :
-                Error = True
-                print("Error: Too many types! in line: ", x["line"], " ,in column: ", x["column"])
-                continue
-            parser.append(x)
-            continue
-        else :
-            if x["type"] == "IDENTIFIER" :
-                if parser[-1]["type"] == "IDENTIFIER" :
-                    Error = True
-                    print("Error: Too many identifiers! in line: ", x["line"], " ,in column: ", x["column"])
-                    continue
-                parser.append(x)
-                continue
-            if x["type"] == "ENDER" :
-                if parser[-1]["type"] == "ENDER" :
-                    continue
-                parser.append(x)
-                continue
-            else :
-                if x["type"] == "CLASS" :
-                    if parser[-1]["type"] == "CLASS" :
-                        Error = True
-                        print("Error: Too many CLASS! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-
-                if x["type"] == "FUNCTION" :
-                    if parser[-1]["type"] == "FUNCTION" :
-                        Error = True
-                        print("Error: Too many FUNCTION! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-
-                if x["type"] == "IF" :
-                    if parser[-1]["type"] == "IF" :
-                        Error = True
-                        print("Error: Too many IF! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-                if x["type"] == "ELSE" :
-                    if parser[-1]["type"] == "ELSE" :
-                        Error = True
-                        print("Error: Too many ELSE! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-
-                if x["type"] == "IMP" :
-                    if parser[-1]["type"] == "IMP" :
-                        Error = True
-                        print("Error: Too many IMP! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-                if x["type"] == "CONST" :
-                    if parser[-1]["type"] == "CONST" :
-                        Error = True
-                        print("Error: Too many CONST! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-                if x["type"] == "STR" :
-                    if parser[-1]["type"] == "STR" :
-                        Error = True
-                        print("Error: Too many string! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-                if x["type"] == "NUMBER" :
-                    if parser[-1]["type"] == "NUMBER" :
-                        Error = True
-                        print("Error: Too many number! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continuk
-                if x["type"] == "RET" :
-                    if parser[-1]["type"] == "RET" :
-                        Error = True
-                        print("Error: Too many RET! in line: ", x["line"], " ,in column: ", x["column"])
-                        continue
-                    parser.append(x)
-                    continue
-                else :
-                    parser.append(x)
+        parser.append(x)
+        continue
     parser.pop(0)
+    return parser
+
+def Token_Append_Type(Token):
+    global Error
+    parser = []
+    tp = "NULL"
+    booll = False
+    while len(Token) != 0:
+        x = Token[0]
+        Token.pop(0)
+        if x["type"] in types :
+            parser.append(x)
+            tp = x["type"]
+            if x["type"] == "BOOL" :
+                booll = True
+            x = Token[0]
+            Token.pop(0)
+            if x["type"] == "IDENTIFIER" :
+                parser.append(x)
+                x = Token[0]
+                Token.pop(0)
+                if x["type"] == "SET" :
+                    parser.append(x)
+                    x = Token[0]
+                    Token.pop(0)
+                    if booll :
+                        if x["type"] == "TRUE" or x["type"] == "FALSE":
+                            parser.append(x)
+                            continue
+                    if x["type"] == Types_in[tp] :
+                        parser.append(x)
+                        continue
+                    else :
+                        Error = True
+                        print("Error: No Type "+ tp +" to "+ x["type"]+" ! in line: ", x["line"], " ,in column: ", x["column"])
+                        continue
+                else :
+                    Error = True
+                    print("Error: No rule ! in line: ", x["line"], " ,in column: ", x["column"])
+                    continue
+            else :
+                Error = True
+                print("Error: No rule ! in line: ", x["line"], " ,in column: ", x["column"])
+                continue
+        else :
+            parser.append(x)
     return parser
