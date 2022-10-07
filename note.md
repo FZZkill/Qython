@@ -27,14 +27,15 @@
 -   后端
 
 整体项目我们可以用llvm的演示图组举例子
-![llvm](./llvm.png " ")
+![llvm](./llvm.png " ") 
+
 llvm不是一个编译器，而是一个编译器的架构，llvm编译器架构通常能支持多种语言和多种架构，支持交叉编译：
 
 -   如果想支持一个新的语言，写出前端就好了
 -   如果想支持一个新的架构，写出后端就好了
 -   如果你已经写完了，直接接入已有的llvm IR就好了
 
-这种分架构的编写是一个屡试不爽的设计思路，本篇也按照这个思路写编译器
+这种分架构的编写(或者称解耦和)是一个屡试不爽的设计思路，本篇也按照这个思路写编译器
 
 ## Parser
 
@@ -76,31 +77,23 @@ Token 一般长这样(这只是例子)
     Token : < E | - >
     Token : < NUMBER | 10 >
 
-"|" 可以被任何分隔符号代替，Qython 用的是",", 使用的是列表 + 元组的形式
+Qython 使用的是列表 + 字典的形式
 
 在`./source/lexer.py`中的 `def Token(value)`函数中
 
 在 lexer.py 中，pos 永远指向下一位
 
-我不打算考虑除了英文以外的字符，因为这是个练手项目
-
 当前阶段，Example.qy 长这个样子 :
 
-    "NMSL"11451N
-    int x;
+    string x = "nmsl"
 
 会输出 Token 流：
 
-    [('STRING', 'NMSL', 1, 5, 6),
-    ('NUMBER', '11451', 1, 5, 11),
-    ('UNDEFINE', 'N', 1, 5, 12), 
-    ('ENDER', None, 2, 6, 13),
-    ('INT', None, 2, 6, 16),
-    ('IDENTIFIER', 'x', 2, 6, 18),
-    ('ENDER', None, 3, 8, 20)]
 
-截止提交 76fc51019534c04a4dca2d3fbc716cc95e239d17 提交,
-Lexer的Token流输出已经全部结束
+    [{'type': 'STRING', 'value': None, 'line': 1, 'column': 6},
+    {'type': 'IDENTIFIER', 'value': 'x', 'line': 2, 'column': 8},
+    {'type': 'SET', 'value': None, 'line': 3, 'column': 10},
+    {'type': 'IDENTIFIER', 'value': '"nmsl"', 'line': 4, 'column': 17}]
 
 ### Parser
 
@@ -129,13 +122,3 @@ Parser输出Parser流，将会控制类型，合并Token流输出Parser流，
 
 所以，Parser流的唯一作用，就是定义文法，依靠文法合并Token流并且报出部分错误.
 
-这里，我的parser分成了多个部分
-
-    Token_Append_KeyWords(Token) -> parser
-    # 检查重复的东西并且报出错误
-    Token_Append_Type(Token) -> parser
-    # 检查int, string, bool, float类型的文法
-    Token_Append_IfElse(Token) -> parser
-    # 检查if和else类型文法并且报出错误
-
-依次类推检查所有类型的文法
