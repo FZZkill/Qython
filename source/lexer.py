@@ -39,6 +39,7 @@ Dicts = {
 
 
 class TokenGroup:
+
     def __init__(self, value):
         self.pos = 0
         self.column = 0
