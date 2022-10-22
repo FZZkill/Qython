@@ -10,4 +10,5 @@ class Parser():
         self.MakePerser(Token)
 
     def MakePerser(self, Token):
-        pass
+        while True:
+            pass
