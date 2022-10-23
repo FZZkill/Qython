@@ -4,6 +4,7 @@ import sys
 
 from source import io
 from source import lexer
+from source import parser
 
 argc = sys.argv
 
@@ -46,7 +47,6 @@ def func():
 
 def check_1(argc):
     global files, compiler, version, compiler, about, output, default
-    flame = False
     for i in argc:
         if i == "--Complier" or i == "-c" or i == "-f":
             compiler = True
@@ -63,18 +63,25 @@ def check_1(argc):
         elif io.isFile(i):
             files.append(i)
         else:
-            raise Exception("Error in " + i)
+            print("Error in " + i)
 
 
 if __name__ == "__main__":
     check_1(argc)
     if len(files) > 1:
-        # print(files)
         for i in range(len(files) - 1):
             sb = io.readInString(files[1])
-            print(sb)
+            print(sb[-1])
+            while True:
+                if sb[-1] == "" or sb[-1] == " ":
+                    print(sb[-1])
+                    del sb[-1]
+                    continue
+                break
             TK = lexer.TokenGroup(sb)
             print(TK.Token)
+            PR = parser.Parser(TK.Token)
+            print(PR.Parser)
     elif len(argc) > 1:
         if about:
             func()

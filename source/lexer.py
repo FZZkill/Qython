@@ -1,45 +1,9 @@
-Key = ["\n", "\r", " "]
-Number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-Dicts = {
-    "int": "INT",
-    "string": "STRING",
-    "float": "FLOAT",
-    "bool": "BOOL",
-    "if": "IF",
-    "else": "ELSE",
-    "class": "CLASS",
-    "true": "TRUE",
-    "false": "FALSE",
-    "fin": "FIN",
-    "fun": "FUN",
-    "imp": "IMP",
-    "ret": "RET",
-    "pri": "PRI",
-    "nil": "NIL",
-    "any": "ANY",
-    "'": "STR",
-    '"': "STR",
-    "+": "ADD",
-    "-": "SUB",
-    "*": "MUL",
-    "/": "DIV",
-    "=": "SET",
-    ">": "BST",
-    "<": "BBT",
-    "!": "NOT",
-    "{": "BOS",
-    "}": "BOE",
-    "(": "SOS",
-    ")": "SOE",
-    "[": "MOS",
-    "]": "MOE",
-    ",": "AND",
-    ".": "USI",
-}
+from source.DEFINE import Key
+from source.DEFINE import Dicts
+from source.DEFINE import Number
 
 
 class TokenGroup:
-
     def __init__(self, value):
         self.pos = 0
         self.column = 0
@@ -72,11 +36,14 @@ class TokenGroup:
                 break
 
             if x in Key:
-                self.line += 1
-                if box in Dicts.keys():
-                    self.TokenIn(Dicts[box], None)
-                else:
-                    self.TokenIn("IDENTIFIER", box)
+                if x == "\n" or x == "\r":
+                    self.line += 1
+                    self.TokenIn("Ender", None)
+                if box not in Key:
+                    if box in Dicts.keys():
+                        self.TokenIn(Dicts[box], None)
+                    else:
+                        self.TokenIn("IDENTIFIER", box)
                 self.poss()
                 box = ""
                 continue
