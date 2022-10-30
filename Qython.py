@@ -3,8 +3,8 @@
 import sys
 
 from source import io
-from source import lexer
-from source import parser
+from source.front import lexer
+from source.front import parser
 
 argc = sys.argv
 
@@ -78,10 +78,10 @@ if __name__ == "__main__":
                     del sb[-1]
                     continue
                 break
-            TK = lexer.TokenGroup(sb)
+            TK = lexer.Lexer(sb)
             print(TK.Token)
             PR = parser.Parser(TK.Token)
-            print(PR.Parser)
+            print(PR.parser)
     elif len(argc) > 1:
         if about:
             func()

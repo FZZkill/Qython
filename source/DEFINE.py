@@ -1,6 +1,6 @@
 Key = ["\n", "\r", " ", ""]
 Number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-Dicts = {
+Keywords = {
     "int": "INT",
     "string": "STRING",
     "float": "FLOAT",
@@ -17,7 +17,10 @@ Dicts = {
     "ret": "RET",
     "pri": "PRI",
     "nil": "NIL",
-    "any": "ANY",
+    "any": "ANY"
+}
+Word = {
+
     "'": "ST1",
     '"': "ST2",
     "+": "ADD",
@@ -37,5 +40,3 @@ Dicts = {
     ",": "AND",
     ".": "USI",
 }
-
-
