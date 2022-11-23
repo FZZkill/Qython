@@ -20,7 +20,6 @@ Keywords = {
     "any": "ANY"
 }
 Word = {
-
     "'": "ST1",
     '"': "ST2",
     "+": "ADD",

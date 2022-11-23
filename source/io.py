@@ -1,10 +1,3 @@
-"""
-# Powered by FZZkill
-# Code with Neovim
-# Project: Qython
-# author: FZZkill
-# License: Mozilla Public License 2
-"""
 import os
 
 
